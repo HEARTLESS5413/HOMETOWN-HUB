@@ -48,16 +48,19 @@ export default function ProfilePage() {
     <AppLayout>
       <div className="max-w-3xl mx-auto p-4 pb-24 lg:pb-4">
         {/* Profile Header */}
-        <div className="glass-card overflow-hidden mb-6">
-          <div className="h-32 bg-gradient-to-r from-indigo-600/50 to-purple-600/50" />
-          <div className="px-6 pb-6 -mt-12">
-            <div className="flex items-end gap-4 mb-4">
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 border-4 border-[var(--bg-card)] flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                {profile.profilePicture ? <img src={profile.profilePicture} alt="" className="w-24 h-24 rounded-2xl object-cover" /> : getInitials(profile.name)}
+        <div className="glass-card overflow-hidden mb-6 border-0 shadow-xl shadow-orange-500/5">
+          <div className="h-48 bg-gradient-to-r from-orange-500/80 via-amber-500/80 to-yellow-500/80 relative">
+            <div className="absolute inset-0 bg-black/20" />
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay" />
+          </div>
+          <div className="px-8 pb-8 -mt-16 relative z-10">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-6 mb-6">
+              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 border-4 border-[var(--bg-card)] flex items-center justify-center text-white text-4xl font-bold shadow-2xl">
+                {profile.profilePicture ? <img src={profile.profilePicture} alt="" className="w-full h-full rounded-xl object-cover" /> : getInitials(profile.name)}
               </div>
-              <div className="flex-1 pb-1">
-                <h1 className="text-xl font-bold">{profile.name}</h1>
-                <p className="text-sm text-[var(--text-muted)]">@{profile.username}</p>
+              <div className="flex-1 pb-2">
+                <h1 className="text-3xl font-bold font-serif text-[var(--text-primary)]">{profile.name}</h1>
+                <p className="text-base text-orange-400 font-medium">@{profile.username}</p>
               </div>
               {isOwnProfile && (
                 <button onClick={() => setEditing(!editing)} className="btn-secondary !py-2 !px-3 text-sm flex items-center gap-1">
@@ -67,15 +70,16 @@ export default function ProfilePage() {
             </div>
 
             {editing ? (
-              <div className="space-y-3">
-                <textarea value={editForm.bio} onChange={e => setEditForm({ ...editForm, bio: e.target.value })} className="input-field text-sm resize-none" rows={2} placeholder="Bio" />
-                <div className="grid grid-cols-2 gap-3">
-                  <input value={editForm.occupation} onChange={e => setEditForm({ ...editForm, occupation: e.target.value })} className="input-field text-sm !py-2" placeholder="Occupation" />
-                  <input value={editForm.education} onChange={e => setEditForm({ ...editForm, education: e.target.value })} className="input-field text-sm !py-2" placeholder="Education" />
+              <div className="space-y-4 bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-color)]">
+                <h3 className="font-semibold text-lg flex items-center gap-2 mb-2"><Edit3 className="w-5 h-5 text-orange-500" /> Edit Profile</h3>
+                <textarea value={editForm.bio} onChange={e => setEditForm({ ...editForm, bio: e.target.value })} className="input-field text-sm resize-none" rows={3} placeholder="Tell the community about yourself..." />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <input value={editForm.occupation} onChange={e => setEditForm({ ...editForm, occupation: e.target.value })} className="input-field text-sm !py-3" placeholder="Occupation (e.g. Software Engineer)" />
+                  <input value={editForm.education} onChange={e => setEditForm({ ...editForm, education: e.target.value })} className="input-field text-sm !py-3" placeholder="Education (e.g. University of Delhi)" />
                 </div>
-                <div className="flex gap-2 justify-end">
-                  <button onClick={() => setEditing(false)} className="btn-secondary !py-1.5 !px-3 text-xs">Cancel</button>
-                  <button onClick={handleSave} className="btn-primary !py-1.5 !px-3 text-xs">Save</button>
+                <div className="flex gap-3 justify-end pt-2">
+                  <button onClick={() => setEditing(false)} className="btn-secondary !py-2 !px-6 text-sm font-medium">Cancel</button>
+                  <button onClick={handleSave} className="btn-primary !py-2 !px-6 text-sm font-medium" style={{ background: 'linear-gradient(135deg, #ea580c, #fb923c)' }}>Save Changes</button>
                 </div>
               </div>
             ) : (
@@ -93,21 +97,33 @@ export default function ProfilePage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="glass-card p-4 text-center">
-            <Zap className="w-5 h-5 text-indigo-400 mx-auto mb-1" />
-            <div className="text-lg font-bold">{profile.contributionPoints}</div>
-            <div className="text-xs text-[var(--text-muted)]">Points</div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div className="glass-card p-6 flex items-center gap-4 card-hover">
+            <div className="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center">
+              <Zap className="w-6 h-6 text-orange-500" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold">{profile.contributionPoints}</div>
+              <div className="text-sm text-[var(--text-muted)] font-medium">Points Earned</div>
+            </div>
           </div>
-          <div className="glass-card p-4 text-center">
-            <Trophy className="w-5 h-5 text-yellow-400 mx-auto mb-1" />
-            <div className="text-lg font-bold">{profile.level}</div>
-            <div className="text-xs text-[var(--text-muted)]">Level</div>
+          <div className="glass-card p-6 flex items-center gap-4 card-hover">
+            <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center">
+              <Trophy className="w-6 h-6 text-amber-500" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold">{profile.level}</div>
+              <div className="text-sm text-[var(--text-muted)] font-medium">Current Level</div>
+            </div>
           </div>
-          <div className="glass-card p-4 text-center">
-            <Users className="w-5 h-5 text-purple-400 mx-auto mb-1" />
-            <div className="text-lg font-bold">{profile.joinedCommunities?.length || 0}</div>
-            <div className="text-xs text-[var(--text-muted)]">Communities</div>
+          <div className="glass-card p-6 flex items-center gap-4 card-hover">
+            <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center">
+              <Users className="w-6 h-6 text-red-500" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold">{profile.joinedCommunities?.length || 0}</div>
+              <div className="text-sm text-[var(--text-muted)] font-medium">Communities Joined</div>
+            </div>
           </div>
         </div>
 
@@ -129,9 +145,9 @@ export default function ProfilePage() {
             <h3 className="font-semibold mb-3">Communities</h3>
             <div className="grid grid-cols-2 gap-3">
               {profile.joinedCommunities.map((c: any) => (
-                <div key={c._id} className="flex items-center gap-3 p-2 rounded-xl hover:bg-[var(--bg-card-hover)] transition-all">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">{c.name?.[0] || 'C'}</div>
-                  <div><div className="text-sm font-medium">{c.name}</div><div className="text-[10px] text-[var(--text-muted)]">{c.memberCount} members</div></div>
+                <div key={c._id} className="flex items-center gap-4 p-3 rounded-xl bg-[var(--bg-secondary)] hover:bg-[var(--bg-card-hover)] transition-all border border-[var(--border-color)] group cursor-pointer">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center text-white text-lg font-bold shadow-md group-hover:scale-105 transition-transform">{c.name?.[0] || 'C'}</div>
+                  <div><div className="text-base font-semibold text-[var(--text-primary)]">{c.name}</div><div className="text-xs text-orange-400 font-medium">{c.memberCount} members</div></div>
                 </div>
               ))}
             </div>

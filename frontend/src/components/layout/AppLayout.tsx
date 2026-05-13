@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getInitials } from '@/lib/utils';
+import CreateCommunityModal from '@/components/modals/CreateCommunityModal';
 
 const navItems = [
   { href: '/feed', icon: Home, label: 'Feed' },
@@ -24,7 +25,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const { user, isAuthenticated, isLoading, loadUser, logout } = useAuthStore();
-  const { theme, toggleTheme, mobileMenuOpen, setMobileMenuOpen } = useUIStore();
+  const { theme, toggleTheme, mobileMenuOpen, setMobileMenuOpen, setCreateCommunityModalOpen } = useUIStore();
 
   useEffect(() => {
     loadUser();
@@ -40,7 +41,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[var(--bg-primary)]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center animate-pulse">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center animate-pulse shadow-lg shadow-orange-500/20">
             <MapPin className="w-6 h-6 text-white" />
           </div>
           <div className="text-[var(--text-muted)]">Loading...</div>
@@ -66,10 +67,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
             <Link href="/feed" className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
                 <MapPin className="w-4 h-4 text-white" />
               </div>
-              <span className="text-lg font-bold gradient-text hidden sm:block">LokConnect</span>
+              <span className="text-lg font-bold gradient-text hidden sm:block font-serif">LokConnect</span>
             </Link>
           </div>
 
@@ -90,7 +91,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full pulse-dot" />
             </Link>
             <Link href={`/profile/${user.username}`} className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-[var(--bg-card-hover)] transition-colors">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center text-white text-xs font-bold shadow-md">
                 {user.profilePicture ? (
                   <img src={user.profilePicture} alt={user.name} className="w-8 h-8 rounded-lg object-cover" />
                 ) : getInitials(user.name)}
@@ -114,18 +115,27 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <nav className="space-y-1">
                 {navItems.map((item) => (
                   <Link key={item.href} href={item.href} onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${pathname === item.href ? 'bg-indigo-500/10 text-indigo-400' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]'}`}>
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${pathname === item.href ? 'bg-orange-500/10 text-orange-500' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]'}`}>
                     <item.icon className="w-5 h-5" />
                     {item.label}
                   </Link>
                 ))}
                 {user.role === 'platformAdmin' && (
                   <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${pathname === '/dashboard' ? 'bg-indigo-500/10 text-indigo-400' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]'}`}>
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${pathname === '/dashboard' ? 'bg-orange-500/10 text-orange-500' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]'}`}>
                     <BarChart3 className="w-5 h-5" /> Dashboard
                   </Link>
                 )}
               </nav>
+              
+              <button 
+                onClick={() => { setMobileMenuOpen(false); setCreateCommunityModalOpen(true); }} 
+                className="btn-primary w-full mt-6 flex items-center justify-center gap-2"
+                style={{ background: 'linear-gradient(135deg, #ea580c, #fb923c)' }}
+              >
+                <Plus className="w-5 h-5" /> Create Community
+              </button>
+
               <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-all mt-4 w-full">
                 <LogOut className="w-5 h-5" /> Sign Out
               </button>
@@ -140,23 +150,31 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <nav className="space-y-1 flex-1">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${pathname === item.href ? 'bg-indigo-500/10 text-indigo-400 glow' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]'}`}>
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${pathname === item.href ? 'bg-orange-500/10 text-orange-500 glow' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]'}`}>
                 <item.icon className="w-5 h-5" />
                 {item.label}
               </Link>
             ))}
             {user.role === 'platformAdmin' && (
               <Link href="/dashboard"
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${pathname === '/dashboard' ? 'bg-indigo-500/10 text-indigo-400' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]'}`}>
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${pathname === '/dashboard' ? 'bg-orange-500/10 text-orange-500' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]'}`}>
                 <BarChart3 className="w-5 h-5" /> Admin Dashboard
               </Link>
             )}
           </nav>
 
+          <button 
+            onClick={() => setCreateCommunityModalOpen(true)} 
+            className="btn-primary w-full my-4 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20"
+            style={{ background: 'linear-gradient(135deg, #ea580c, #fb923c)' }}
+          >
+            <Plus className="w-5 h-5" /> Create Community
+          </button>
+
           {/* User card */}
-          <div className="glass-card p-4 mt-4">
+          <div className="glass-card p-4">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center text-white text-sm font-bold shadow-md">
                 {getInitials(user.name)}
               </div>
               <div className="flex-1 min-w-0">
@@ -166,7 +184,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
             <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
               <span className="flex items-center gap-1">⚡ {user.contributionPoints} pts</span>
-              <span className="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400">{user.level}</span>
+              <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-500 font-medium">{user.level}</span>
             </div>
           </div>
 
@@ -186,13 +204,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="flex items-center justify-around py-2">
           {navItems.slice(0, 5).map((item) => (
             <Link key={item.href} href={item.href}
-              className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all ${pathname === item.href ? 'text-indigo-400' : 'text-[var(--text-muted)]'}`}>
+              className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all ${pathname === item.href ? 'text-orange-500' : 'text-[var(--text-muted)]'}`}>
               <item.icon className="w-5 h-5" />
               <span className="text-[10px] font-medium">{item.label}</span>
             </Link>
           ))}
         </div>
       </nav>
+
+      {/* Global Modals */}
+      <CreateCommunityModal />
     </div>
   );
 }

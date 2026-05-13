@@ -34,14 +34,14 @@ function PostCard({ post, onLike }: { post: Post; onLike: (id: string) => void }
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold">
-            {post.author.profilePicture ? <img src={post.author.profilePicture} alt="" className="w-10 h-10 rounded-xl object-cover" /> : getInitials(post.author.name)}
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center text-white text-lg font-bold shadow-md">
+            {post.author.profilePicture ? <img src={post.author.profilePicture} alt="" className="w-12 h-12 rounded-xl object-cover" /> : getInitials(post.author.name)}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-medium text-sm">{post.author.name}</span>
-              {post.isPinned && <Pin className="w-3 h-3 text-indigo-400" />}
-              {post.type === 'announcement' && <Megaphone className="w-3 h-3 text-yellow-400" />}
+              <span className="font-bold text-base text-[var(--text-primary)] hover:text-orange-500 transition-colors cursor-pointer">{post.author.name}</span>
+              {post.isPinned && <Pin className="w-3.5 h-3.5 text-orange-500" />}
+              {post.type === 'announcement' && <Megaphone className="w-3.5 h-3.5 text-yellow-500" />}
             </div>
             <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
               <span>@{post.author.username}</span>
@@ -74,9 +74,9 @@ function PostCard({ post, onLike }: { post: Post; onLike: (id: string) => void }
             const totalVotes = post.pollOptions.reduce((sum, o) => sum + o.votes.length, 0);
             const pct = totalVotes > 0 ? (opt.votes.length / totalVotes) * 100 : 0;
             return (
-              <button key={i} className="w-full text-left p-3 rounded-xl border border-[var(--border-color)] hover:border-indigo-500/30 relative overflow-hidden transition-all">
-                <div className="absolute inset-0 bg-indigo-500/10 transition-all" style={{ width: `${pct}%` }} />
-                <div className="relative flex items-center justify-between text-sm">
+              <button key={i} className="w-full text-left p-3 rounded-xl border border-[var(--border-color)] hover:border-orange-500/40 relative overflow-hidden transition-all group">
+                <div className="absolute inset-0 bg-orange-500/10 transition-all" style={{ width: `${pct}%` }} />
+                <div className="relative flex items-center justify-between text-sm font-medium">
                   <span>{opt.text}</span>
                   <span className="text-[var(--text-muted)]">{Math.round(pct)}%</span>
                 </div>
@@ -87,22 +87,22 @@ function PostCard({ post, onLike }: { post: Post; onLike: (id: string) => void }
       )}
 
       {/* Actions */}
-      <div className="flex items-center justify-between pt-2 border-t border-[var(--border-color)]">
-        <div className="flex items-center gap-1">
-          <button onClick={() => onLike(post._id)} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all ${isLiked ? 'text-red-400 bg-red-500/10' : 'text-[var(--text-muted)] hover:bg-[var(--bg-card-hover)]'}`}>
-            <Heart className={`w-4 h-4 ${isLiked ? 'fill-red-400' : ''}`} />
+      <div className="flex items-center justify-between pt-3 border-t border-[var(--border-color)]">
+        <div className="flex items-center gap-2">
+          <button onClick={() => onLike(post._id)} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${isLiked ? 'text-red-500 bg-red-500/10' : 'text-[var(--text-muted)] hover:bg-[var(--bg-card-hover)] hover:text-red-400'}`}>
+            <Heart className={`w-4 h-4 ${isLiked ? 'fill-red-500' : ''}`} />
             <span>{post.likeCount}</span>
           </button>
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-[var(--text-muted)] hover:bg-[var(--bg-card-hover)] transition-all">
+          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-[var(--text-muted)] hover:bg-[var(--bg-card-hover)] hover:text-orange-400 transition-all">
             <MessageSquare className="w-4 h-4" />
             <span>{post.commentCount}</span>
           </button>
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-[var(--text-muted)] hover:bg-[var(--bg-card-hover)] transition-all">
+          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-[var(--text-muted)] hover:bg-[var(--bg-card-hover)] hover:text-orange-400 transition-all">
             <Share2 className="w-4 h-4" />
           </button>
         </div>
-        <button onClick={handleBookmark} className={`p-1.5 rounded-lg transition-all ${bookmarked ? 'text-indigo-400 bg-indigo-500/10' : 'text-[var(--text-muted)] hover:bg-[var(--bg-card-hover)]'}`}>
-          <Bookmark className={`w-4 h-4 ${bookmarked ? 'fill-indigo-400' : ''}`} />
+        <button onClick={handleBookmark} className={`p-2 rounded-lg transition-all ${bookmarked ? 'text-orange-500 bg-orange-500/10' : 'text-[var(--text-muted)] hover:bg-[var(--bg-card-hover)] hover:text-orange-400'}`}>
+          <Bookmark className={`w-5 h-5 ${bookmarked ? 'fill-orange-500' : ''}`} />
         </button>
       </div>
     </motion.div>
@@ -167,17 +167,17 @@ export default function FeedPage() {
         <h1 className="text-2xl font-bold mb-6">Your Feed</h1>
 
         {/* Post Composer */}
-        <div className="glass-card p-5 mb-6">
-          <div className="flex items-center gap-3 mb-3">
+        <div className="glass-card p-6 mb-6 border-0 shadow-lg shadow-orange-500/5">
+          <div className="flex items-center gap-3 mb-4">
             {communities.length > 0 && (
-              <select value={selectedCommunity} onChange={(e) => setSelectedCommunity(e.target.value)} className="input-field !py-2 text-sm !rounded-lg max-w-[200px]">
+              <select value={selectedCommunity} onChange={(e) => setSelectedCommunity(e.target.value)} className="input-field !py-2 text-sm !rounded-lg max-w-[200px] font-medium bg-[var(--bg-secondary)] border-[var(--border-color)] hover:border-orange-500/50 transition-colors">
                 {communities.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
               </select>
             )}
-            <div className="flex items-center gap-1 ml-auto">
+            <div className="flex items-center gap-1 ml-auto bg-[var(--bg-secondary)] p-1 rounded-xl border border-[var(--border-color)]">
               {(['text', 'announcement', 'poll'] as const).map(t => (
-                <button key={t} onClick={() => setPostType(t)} className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${postType === t ? 'bg-indigo-500/20 text-indigo-400' : 'text-[var(--text-muted)] hover:bg-[var(--bg-card-hover)]'}`}>
-                  {t === 'text' ? 'Post' : t === 'announcement' ? '📢' : '📊'}
+                <button key={t} onClick={() => setPostType(t)} className={`px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${postType === t ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'}`}>
+                  {t === 'text' ? 'Post' : t === 'announcement' ? 'Alert' : 'Poll'}
                 </button>
               ))}
             </div>
@@ -189,13 +189,13 @@ export default function FeedPage() {
             className="input-field !rounded-xl resize-none min-h-[80px] text-sm"
             rows={3}
           />
-          <div className="flex items-center justify-between mt-3">
+          <div className="flex items-center justify-between mt-4">
             <div className="flex items-center gap-2">
-              <button className="p-2 rounded-lg hover:bg-[var(--bg-card-hover)] text-[var(--text-muted)]"><ImageIcon className="w-5 h-5" /></button>
-              <button className="p-2 rounded-lg hover:bg-[var(--bg-card-hover)] text-[var(--text-muted)]"><BarChart3 className="w-5 h-5" /></button>
+              <button className="p-2.5 rounded-xl bg-[var(--bg-secondary)] hover:bg-orange-500/10 text-[var(--text-muted)] hover:text-orange-500 transition-colors border border-[var(--border-color)]"><ImageIcon className="w-5 h-5" /></button>
+              <button className="p-2.5 rounded-xl bg-[var(--bg-secondary)] hover:bg-orange-500/10 text-[var(--text-muted)] hover:text-orange-500 transition-colors border border-[var(--border-color)]"><BarChart3 className="w-5 h-5" /></button>
             </div>
-            <button onClick={handleCreatePost} disabled={posting || !newPostContent.trim()} className="btn-primary !py-2 !px-5 text-sm flex items-center gap-2">
-              {posting ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Send className="w-4 h-4" /> Post</>}
+            <button onClick={handleCreatePost} disabled={posting || !newPostContent.trim()} className="btn-primary !py-2.5 !px-6 text-sm font-semibold flex items-center gap-2 shadow-lg shadow-orange-500/20" style={{ background: 'linear-gradient(135deg, #ea580c, #fb923c)' }}>
+              {posting ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Send className="w-4 h-4" /> Post Update</>}
             </button>
           </div>
         </div>
@@ -210,10 +210,17 @@ export default function FeedPage() {
               </div>
             ))
           ) : posts.length === 0 ? (
-            <div className="text-center py-16">
-              <Users className="w-12 h-12 text-[var(--text-muted)] mx-auto mb-4" />
-              <h3 className="font-semibold mb-2">No posts yet</h3>
-              <p className="text-sm text-[var(--text-muted)]">Join some communities and create your first post!</p>
+            <div className="glass-card p-12 text-center border-dashed border-2 border-[var(--border-color)] bg-[var(--bg-secondary)]">
+              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-orange-500/20 to-amber-500/20 rounded-full flex items-center justify-center mb-6">
+                <Users className="w-10 h-10 text-orange-500" />
+              </div>
+              <h3 className="text-2xl font-bold font-serif mb-3 text-[var(--text-primary)]">Your feed is quiet</h3>
+              <p className="text-base text-[var(--text-secondary)] max-w-sm mx-auto mb-6 leading-relaxed">
+                Connect with your roots. Join communities from your hometown or city to see local updates and stories here.
+              </p>
+              <button onClick={() => window.location.href = '/discover'} className="btn-secondary !px-8 font-medium border-orange-500/30 hover:bg-orange-500/10 text-orange-500">
+                Discover Communities
+              </button>
             </div>
           ) : (
             posts.map((post) => <PostCard key={post._id} post={post} onLike={handleLike} />)
