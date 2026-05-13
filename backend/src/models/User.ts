@@ -118,8 +118,6 @@ const userSchema = new Schema<IUser>(
 );
 
 // Indexes
-userSchema.index({ email: 1 });
-userSchema.index({ username: 1 });
 userSchema.index({ city: 1 });
 userSchema.index({ hometown: 1 });
 userSchema.index({ state: 1 });

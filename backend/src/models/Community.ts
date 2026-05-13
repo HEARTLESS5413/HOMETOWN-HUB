@@ -111,7 +111,6 @@ const communitySchema = new Schema<ICommunity>(
 );
 
 // Indexes
-communitySchema.index({ slug: 1 });
 communitySchema.index({ city: 1 });
 communitySchema.index({ state: 1 });
 communitySchema.index({ category: 1 });
