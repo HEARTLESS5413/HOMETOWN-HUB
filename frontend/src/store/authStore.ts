@@ -46,12 +46,36 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const token = localStorage.getItem('lokconnect_token');
       if (!token) { set({ isLoading: false }); return; }
+      
       const res = await authAPI.getMe();
-      set({ user: res.data.data.user, token, isAuthenticated: true, isLoading: false });
-    } catch {
-      localStorage.removeItem('lokconnect_token');
-      localStorage.removeItem('lokconnect_user');
-      set({ user: null, token: null, isAuthenticated: false, isLoading: false });
+      const user = res.data.data.user;
+      
+      // Update cache
+      localStorage.setItem('lokconnect_user', JSON.stringify(user));
+      set({ user, token, isAuthenticated: true, isLoading: false });
+    } catch (error: any) {
+      // If it's specifically an unauthorized error, clear the session
+      if (error?.response?.status === 401) {
+        localStorage.removeItem('lokconnect_token');
+        localStorage.removeItem('lokconnect_user');
+        set({ user: null, token: null, isAuthenticated: false, isLoading: false });
+      } else {
+        // If it's a network timeout (e.g., Render server spinning up) or 500 error,
+        // DO NOT log the user out. Fallback to cached user data.
+        const cachedUserStr = localStorage.getItem('lokconnect_user');
+        const token = localStorage.getItem('lokconnect_token');
+        
+        if (cachedUserStr && token) {
+          try {
+            const cachedUser = JSON.parse(cachedUserStr);
+            set({ user: cachedUser, token, isAuthenticated: true, isLoading: false });
+          } catch {
+            set({ isLoading: false });
+          }
+        } else {
+          set({ isLoading: false });
+        }
+      }
     }
   },
 
